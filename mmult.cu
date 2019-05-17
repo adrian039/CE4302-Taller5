@@ -89,11 +89,11 @@ int main(int argc, char **argv){
     C.elements = (float*)malloc(C.width * C.height * sizeof(float));
     for(int i = 0; i < A.height; i++)
         for(int j = 0; j < A.width; j++)
-            A.elements[i*A.width + j] = (float)(rand() % 6262564);
+            A.elements[i*A.width + j] = (float)(rand() % 1024);
 
     for(int i = 0; i < B.height; i++)
         for(int j = 0; j < B.width; j++)
-            B.elements[i*B.width + j] = (float)(rand() % 6461645);
+            B.elements[i*B.width + j] = (float)(rand() % 1024);
     MatMul(A, B, C);
     // Print up to a 10x10 portion of the three matrices
 
