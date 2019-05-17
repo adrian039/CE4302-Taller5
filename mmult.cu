@@ -1,12 +1,6 @@
-/*
-* multNoShare.c
-*
-* Robert Hochberg
-* January 24, 2012
-*
-* Based nearly entirely on the code from the CUDA C Programming Guide
-*/
+
 #include <stdio.h>
+#include <math.h>
 // Matrices are stored in row-major order:
 // M(row, col) = *(M.elements + row * M.width + col)
 typedef struct {
@@ -95,11 +89,11 @@ int main(int argc, char **argv){
     C.elements = (float*)malloc(C.width * C.height * sizeof(float));
     for(int i = 0; i < A.height; i++)
         for(int j = 0; j < A.width; j++)
-            A.elements[i*A.width + j] = (float)(arc4random() % 3);
+            A.elements[i*A.width + j] = (float)(rand() % 3);
 
     for(int i = 0; i < B.height; i++)
         for(int j = 0; j < B.width; j++)
-            B.elements[i*B.width + j] = (float)(arc4random() % 2);
+            B.elements[i*B.width + j] = (float)(rand() % 2);
     MatMul(A, B, C);
     // Print up to a 10x10 portion of the three matrices
 
