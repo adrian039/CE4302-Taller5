@@ -5,7 +5,7 @@
 typedef struct {
     int width;
     int height;
-    int* elements;
+    float* elements;
 } Matrix;
 
 // Thread block size
@@ -20,7 +20,7 @@ void MatMul(const Matrix A, const Matrix B, Matrix C) {
     Matrix d_A;
     d_A.width = A.width;
     d_A.height = A.height;
-    size_t size = A.width * A.height * sizeof(int);
+    size_t size = A.width * A.height * sizeof(float);
     cudaError_t err = cudaMalloc(&d_A.elements, size);
     // printf("CUDA malloc A: %s\n",cudaGetErrorString(err));
     err = cudaMemcpy(d_A.elements, A.elements, size, cudaMemcpyHostToDevice);
@@ -28,7 +28,7 @@ void MatMul(const Matrix A, const Matrix B, Matrix C) {
     Matrix d_B;
     d_B.width = B.width;
     d_B.height = B.height;
-    size = B.width * B.height * sizeof(int);
+    size = B.width * B.height * sizeof(float);
     err = cudaMalloc(&d_B.elements, size);
 
     // printf("CUDA malloc B: %s\n",cudaGetErrorString(err));
@@ -38,7 +38,7 @@ void MatMul(const Matrix A, const Matrix B, Matrix C) {
     Matrix d_C;
     d_C.width = C.width;
     d_C.height = C.height;
-    size = C.width * C.height * sizeof(int);
+    size = C.width * C.height * sizeof(float);
     err = cudaMalloc(&d_C.elements, size);
     // printf("CUDA malloc C: %s\n",cudaGetErrorString(err));
     // Invoke kernel
@@ -61,7 +61,7 @@ void MatMul(const Matrix A, const Matrix B, Matrix C) {
 __global__ void MatMulKernel(Matrix A, Matrix B, Matrix C) {
     // Each thread computes one element of C
     // by accumulating results into Cvalue
-    int Cvalue = 0.0;
+    float Cvalue = 0.0;
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     if(row > A.height || col > B.width) return;
@@ -80,20 +80,20 @@ int main(int argc, char **argv){
     b2 = 4; /* Width of B */
     A.height = a1;
     A.width = a2;
-    A.elements = (int*)malloc(A.width * A.height * sizeof(int));
+    A.elements = (float*)malloc(A.width * A.height * sizeof(float));
     B.height = b1;
     B.width = b2;
-    B.elements = (int*)malloc(B.width * B.height * sizeof(int));
+    B.elements = (float*)malloc(B.width * B.height * sizeof(float));
     C.height = A.height;
     C.width = B.width;
-    C.elements = (int*)malloc(C.width * C.height * sizeof(int));
+    C.elements = (float*)malloc(C.width * C.height * sizeof(float));
     for(int i = 0; i < A.height; i++)
         for(int j = 0; j < A.width; j++)
-            A.elements[i*A.width + j] = (int)(rand() % 1024);
+            A.elements[i*A.width + j] = (float)(rand() % 128);
 
     for(int i = 0; i < B.height; i++)
         for(int j = 0; j < B.width; j++)
-            B.elements[i*B.width + j] = (int)(rand() % 1024);
+            B.elements[i*B.width + j] = (float)(rand() % 128);
     MatMul(A, B, C);
 
     for(int i = 0; i < min(10, A.height); i++){
