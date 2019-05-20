@@ -1,23 +1,3 @@
-// Approximation of Pi using a simple, and not optimized, CUDA program
-// Copyleft Alessandro Re
-//
-// GCC 6.x not supported by CUDA 8, I used compat version
-//
-// nvcc -std=c++11 -ccbin=gcc5 pigreco.cu -c
-// g++5 pigreco.o -lcudart -L/usr/local/cuda/lib64 -o pigreco
-//
-// This code is basically equivalent to the following Python code:
-//
-// def pigreco(NUM):
-//     from random import random as rand
-//     def sqrad():
-//         x, y = rand(), rand()
-//         return x*x + y*y
-//     return 4 * sum(1 - int(test()) for _ in range(NUM)) / NUM
-//
-// Python version takes, on this machine, 3.5 seconds to compute 10M tests
-// CUDA version takes, on this machine, 1.6 seconds to compute 20.48G tests
-//
 #include <iostream>
 #include <limits>
 #include <cuda.h>
@@ -69,13 +49,12 @@ __global__ void picount(Count *totals) {
 
 int main(int argc, char **argv) {
 	int numDev;
-	double start_time, run_time;
 	cudaGetDeviceCount(&numDev);
 	if (numDev < 1) {
 		cout << "CUDA device missing! Do you need to use optirun?\n";
 		return 1;
 	}
-	start_time = omp_get_wtime();
+	clock_t start_d=clock();
 	cout << "Starting simulation with " << NBLOCKS << " blocks, " << WARP_SIZE << " threads, and " << ITERATIONS << " iterations\n";
 
 	// Allocate host and device memory to store the counters
@@ -101,8 +80,9 @@ int main(int argc, char **argv) {
 	// Set maximum precision for decimal printing
 //	cout.precision(DblLim::max_digits10);
 	cout << "PI ~= " << 4.0 * (double)total/(double)tests << endl;
-	run_time = omp_get_wtime() - start_time;
-    printf("\n pi is %f in %f seconds \n",pi,run_time);
+	clock_t end_d = clock();
+	double time_d = (double)(end_d-start_d)/CLOCKS_PER_SEC;
+    printf("\n seconds \n",pi,time_d);
 
 
 	return 0;
