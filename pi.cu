@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
 	cout << "Approximated PI using " << tests << " random tests\n";
 
 	// Set maximum precision for decimal printing
-	cout.precision(DblLim::max_digits10);
+//	cout.precision(DblLim::max_digits10);
 	cout << "PI ~= " << 4.0 * (double)total/(double)tests << endl;
 
 	return 0;
