@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
 	cout << "PI ~= " << 4.0 * (double)total/(double)tests << endl;
 	clock_t end_d = clock();
 	double time_d = (double)(end_d-start_d)/CLOCKS_PER_SEC;
-    printf("\n seconds \n",pi,time_d);
+    printf("\n Seconds: %fs\n",time_d);
 
 
 	return 0;
