@@ -22,6 +22,7 @@
 #include <limits>
 #include <cuda.h>
 #include <curand_kernel.h>
+#include <omp.h>
 
 using std::cout;
 using std::endl;
@@ -68,11 +69,13 @@ __global__ void picount(Count *totals) {
 
 int main(int argc, char **argv) {
 	int numDev;
+	double start_time, run_time;
 	cudaGetDeviceCount(&numDev);
 	if (numDev < 1) {
 		cout << "CUDA device missing! Do you need to use optirun?\n";
 		return 1;
 	}
+	start_time = omp_get_wtime();
 	cout << "Starting simulation with " << NBLOCKS << " blocks, " << WARP_SIZE << " threads, and " << ITERATIONS << " iterations\n";
 
 	// Allocate host and device memory to store the counters
@@ -98,6 +101,9 @@ int main(int argc, char **argv) {
 	// Set maximum precision for decimal printing
 //	cout.precision(DblLim::max_digits10);
 	cout << "PI ~= " << 4.0 * (double)total/(double)tests << endl;
+	run_time = omp_get_wtime() - start_time;
+    printf("\n pi is %f in %f seconds \n",pi,run_time);
+
 
 	return 0;
 }
