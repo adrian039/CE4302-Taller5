@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include <limits>
 #include <cuda.h>
 #include <curand_kernel.h>
