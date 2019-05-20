@@ -13,7 +13,7 @@ typedef std::numeric_limits<double> DblLim;
 
 const Count WARP_SIZE = 32; // Warp size
 const Count NBLOCKS = 640; // Number of total cuda cores on my GPU
-const Count ITERATIONS = 1000000; // Number of points to generate (each thread)
+const Count ITERATIONS = 10000000; // Number of points to generate (each thread)
 
 // This kernel is 
 __global__ void picount(Count *totals) {
